@@ -1,0 +1,8 @@
+<!-- This file is made in order to load Rviz for the neato along with state publisher -->
+
+<launch>
+
+  <include file="$(find neato_description)/launch/state_publisher_neato_real.launch" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find neato_description)/rviz/neato_real_laser.rviz" required="true" />
+
+</launch>

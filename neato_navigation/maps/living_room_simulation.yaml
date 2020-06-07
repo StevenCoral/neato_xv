@@ -1,0 +1,6 @@
+free_thresh: 0.2
+image: living_room_closed.png
+negate: 0
+occupied_thresh: 0.65
+origin: [-0.8, -0.5, 0.0] #-2.6 -2.3
+resolution: 0.01

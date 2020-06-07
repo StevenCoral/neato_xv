@@ -1,0 +1,12 @@
+<!-- This file if for running the lidar input reader and speed controller, on the Raspberry Pi -->
+
+<launch>  
+ 
+  <node name="lidar_driver" pkg="xv_11_laser_driver" type="neato_laser_publisher"
+        args="_port:=/dev/ttyUSB0"  respawn="false" output="screen" />  
+
+  <node name="lidar_rotator" pkg="neato_real" type="lidar_rotator_rpi.py"
+        respawn="false" output="screen" />
+
+</launch>
+

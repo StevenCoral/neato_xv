@@ -1,0 +1,12 @@
+<!-- This file is made in order to publish complete robot TF using the urdf file and the state publishers -->
+
+<launch>
+
+  <arg name="gui" default="False" />
+  <param name="robot_description" textfile="$(find neato_description)/urdf/neato_real_laser.urdf" />
+  <param name="use_gui" value="$(arg gui)"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+</launch>
+

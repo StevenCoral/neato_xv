@@ -1,0 +1,11 @@
+<!-- This file is made in order to load the gazebo world along with state publisher and teleop so you can drive around -->
+<launch>
+
+  <include file="$(find neato_description)/launch/state_publisher_neato.launch" />
+  
+  <include file="$(find neato_simulation)/launch/gazebo_willow_garage.launch" />
+
+  <include file="$(find neato_navigation)/launch/teleop_simulation.launch" />
+ 
+</launch>
+

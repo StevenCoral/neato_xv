@@ -1,0 +1,13 @@
+<!-- This file is made in order to run the controller software and RC input nodes for the Neato -->
+
+<launch>  
+ 
+  <node name="rc_sniffer" pkg="teleop_rc" type="teleop_rc.py" output="screen" />
+
+  <node name="command_handler" pkg="neato_real" type="command_handler.py" output="screen" />
+
+  <node name="neato_driver" pkg="neato_real" type="neato_driver_rpi.py" output="screen" />
+ 
+
+</launch>
+

@@ -1,0 +1,380 @@
+<?xml version="1.0"?>
+
+<robot name="neato">
+<!-- Neato base links and joints --> 
+  <link name="base_footprint"/>
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://neato_description/urdf/meshes/neato_xv_14.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 -1.57079" xyz="-0.165 0.165 0"/>
+      <material name="white">
+        <color rgba="0.9 0.9 0.9 0.8"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.05 0 0.04" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.322 0.332 0.02"/>        
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.02" ixy="0.0" ixz="0.0"
+               iyy="0.02" iyz="0.0"
+               izz="0.03" />
+    </inertial>    
+  </link>
+  <joint name="base_joint" type="fixed">
+    <origin xyz="0 0 0.01" rpy="0 0 0" />
+    <parent link="base_footprint"/>
+    <child link="base_link" />
+  </joint>
+  
+  <link name="wheel_right_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://neato_description/urdf/meshes/neato_wheel.stl" scale="0.001 0.001 0.001"/>        
+      </geometry>
+      <origin rpy="0 0 -1.57079" xyz="-0.0375 0.007 -0.0375"/>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57079 0 0"/>
+      <geometry>        
+        <cylinder length="0.014" radius="0.03752"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.04" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+               iyy="0.001" iyz="0.0"
+               izz="0.001" />
+    </inertial>
+  </link>
+  <joint name="base_to_right_wheel" type="continuous">
+    <axis xyz="0 1 0" />
+    <parent link="base_link"/>
+    <child link="wheel_right_link"/>
+    <origin xyz="0 -0.116 0.0375"/>
+  </joint>
+  
+  <link name="wheel_left_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://neato_description/urdf/meshes/neato_wheel.stl" scale="0.001 0.001 0.001"/>        
+      </geometry>
+      <origin rpy="0 0 -1.57079" xyz="-0.0375 0.007 -0.0375"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57079 0 0"/>
+      <geometry>        
+        <cylinder length="0.014" radius="0.03750"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.04" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+               iyy="0.001" iyz="0.0"
+               izz="0.001" />
+    </inertial>
+  </link>
+  <joint name="base_to_left_wheel" type="continuous">
+    <axis xyz="0 1 0" />
+    <parent link="base_link"/>
+    <child link="wheel_left_link"/>
+    <origin xyz="0 0.116 0.0375"/>
+  </joint>
+  
+  <link name="front_caster">    
+    <visual>
+      <origin xyz="0 0 0" rpy="0 1.57079 0"/>      
+      <geometry>
+        <cylinder length="0.02" radius="0.01"/>        
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.01"/>        
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+               iyy="0.001" iyz="0.0"
+               izz="0.001" />
+    </inertial>
+  </link>
+  <joint name="base_to_front_caster" type="fixed">
+    <axis xyz="1 0 0" />
+    <parent link="base_link"/>
+    <child link="front_caster"/>
+    <origin xyz="0.1 0 0.011"/>
+  </joint>
+    
+  <link name="rear_caster">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 1.57079 0"/>      
+      <geometry>
+        <cylinder length="0.02" radius="0.01"/>        
+      </geometry>
+      <material name="grey"/>
+    </visual>    
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.01"/>       
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+               iyy="0.001" iyz="0.0"
+               izz="0.001" />
+    </inertial>
+  </link>
+  <joint name="base_to_rear_caster" type="fixed">
+    <axis xyz="1 0 0" />
+    <parent link="base_link"/>
+    <child link="rear_caster"/>
+    <origin xyz="-0.1 0 0.011"/>
+  </joint>
+  
+<!-- Neato base gazebo extensions -->
+  <gazebo reference="base_link">
+    <mu1>0.3</mu1>
+    <mu2>0.3</mu2>
+    <material>Gazebo/White</material>            
+  </gazebo>
+
+  <gazebo reference="right_wheel">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>    
+    <material>Gazebo/Black</material>    	    
+  </gazebo>
+	
+  <gazebo reference="left_wheel">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>    
+    <material>Gazebo/Black</material>    	    
+  </gazebo>
+
+  <gazebo reference="front_caster">
+    <mu1>0.0</mu1>
+    <mu2>0.0</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <gazebo reference="rear_caster">
+    <mu1>0.0</mu1>
+    <mu2>0.0</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+      <legacyMode>false</legacyMode>
+      <publishTf>1</publishTf> 
+      <publishWheelTF>true</publishWheelTF>
+      <publishWheelJointState>true</publishWheelJointState>  
+      <alwaysOn>true</alwaysOn>
+      <updateRate>20</updateRate>
+      <leftJoint>base_to_left_wheel</leftJoint>
+      <rightJoint>base_to_right_wheel</rightJoint>
+      <wheelSeparation>0.232</wheelSeparation>
+      <wheelDiameter>0.075</wheelDiameter>
+      <wheelTorque>5</wheelTorque>
+      <wheelAcceleration>0</wheelAcceleration>
+      <commandTopic>/cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <robotBaseFrame>base_footprint</robotBaseFrame>
+    </plugin>    
+  
+</gazebo>
+
+<!-- Laser sensor link and joint --> 
+  <link name="laser_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.01" radius="0.01"/>
+      </geometry>
+      <material name="grey"/>
+    </visual> 
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.000001" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+               iyy="0.0001" iyz="0.0"
+               izz="0.0001" />
+    </inertial>     
+  </link>
+
+  <joint name="base_to_laser" type="fixed">
+    <axis xyz="0 0 1" />
+    <origin xyz="-0.1 0.0 0.09" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="laser_link" />
+  </joint>
+
+<!-- Laser sensor gazebo extensions -->
+  <gazebo reference="laser_link">    
+    <sensor name="hokuyo_laser" type="ray">
+      <pose>0 0 0 0 0 0</pose>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14</min_angle>
+            <max_angle>3.14</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.1</min>
+          <max>4</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <plugin name="laser" filename="libgazebo_ros_laser.so">
+	  <topicName>/scan</topicName>
+          <frameName>laser_link</frameName>
+      </plugin>
+      <always_on>1</always_on>
+      <update_rate>5</update_rate>
+      <visualize>false</visualize>        
+    </sensor>
+  </gazebo>
+
+<!-- Kinect sensor links and joints --> 
+  <joint name="camera_rgb_joint" type="fixed">
+      <origin rpy="0 0 0" xyz="-0.065 -0.0125 0.152"/>
+      <parent link="base_link"/>
+      <child link="camera_rgb_frame"/>
+  </joint>
+  <link name="camera_rgb_frame"/>
+
+  <joint name="camera_rgb_optical_joint" type="fixed">
+    <origin rpy="-1.570795 0 -1.570795" xyz="0 0 0"/>
+    <parent link="camera_rgb_frame"/>
+    <child link="camera_rgb_optical_frame"/>
+  </joint>
+  <link name="camera_rgb_optical_frame"/>
+
+  <joint name="camera_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.031 0.0125 -0.016"/>
+    <parent link="camera_rgb_frame"/>
+    <child link="camera_link"/>
+  </joint>
+  <link name="camera_link">
+    <visual>
+      <origin rpy="0 0 1.570795" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://neato_description/urdf/meshes/kinect.dae"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.07271 0.27794 0.02"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.564" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.003881243" ixy="0.0" ixz="0.0"
+               iyy="0.000498940" iyz="0.0"
+               izz="0.003879257" />
+    </inertial>
+  </link>
+  <!-- The fixed joints & links below are usually published by static_transformers launched by the OpenNi launch 
+         files. However, for Gazebo simulation we need them, so we add them here.
+         (Hence, don't publish them additionally!) -->
+  <joint name="camera_depth_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0.025 0"/>
+    <parent link="camera_rgb_frame"/>
+    <child link="camera_depth_frame"/>
+  </joint>
+  <link name="camera_depth_frame"/>
+
+  <joint name="camera_depth_optical_joint" type="fixed">
+    <origin rpy="-1.570795 0 -1.570795" xyz="0 0 0"/>
+    <parent link="camera_depth_frame"/>
+    <child link="camera_depth_optical_frame"/>
+  </joint>
+  <link name="camera_depth_optical_frame"/>
+
+<!-- Kinect sensor gazebo extensions -->
+  <gazebo reference="camera_link">     
+    <sensor type="depth" name="camera">
+      <always_on>true</always_on>
+      <update_rate>20.0</update_rate>
+      <camera>
+        <horizontal_fov>1.04719</horizontal_fov>
+        <image>
+          <format>B8G8R8</format>
+          <width>640</width>
+          <height>480</height>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>8.0</far>
+        </clip>
+      </camera>
+      <plugin name="kinect_camera_controller" filename="libgazebo_ros_openni_kinect.so">
+        <cameraName>camera</cameraName>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>10</updateRate>
+        <imageTopicName>rgb/image_raw</imageTopicName>
+        <depthImageTopicName>depth/image_raw</depthImageTopicName>
+        <pointCloudTopicName>depth/points</pointCloudTopicName>
+        <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
+        <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
+        <frameName>camera_depth_optical_frame</frameName>
+        <baseline>0.1</baseline>
+        <distortion_k1>0.0</distortion_k1>
+        <distortion_k2>0.0</distortion_k2>
+        <distortion_k3>0.0</distortion_k3>
+        <distortion_t1>0.0</distortion_t1>
+        <distortion_t2>0.0</distortion_t2>
+        <pointCloudCutoff>0.4</pointCloudCutoff>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</robot>

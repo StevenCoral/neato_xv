@@ -1,0 +1,8 @@
+<!-- This file is for loading the neato motion control along with the lidar input -->
+
+<launch>
+
+	<include file="$(find neato_real)/launch/raspberry_pi/neato_lidar_drivers.launch" />
+	<include file="$(find neato_real)/launch/raspberry_pi/neato_base_controller.launch" />
+
+</launch>
