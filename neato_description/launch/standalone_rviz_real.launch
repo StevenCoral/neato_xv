@@ -1,4 +1,5 @@
-<!-- This file is made in order to load Rviz for the neato along with state publisher -->
+<!-- This file is made in order to load Rviz for the neato along with state publisher,
+listening to the lidar topic from the real driver. -->
 
 <launch>
 

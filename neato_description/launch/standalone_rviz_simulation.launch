@@ -1,4 +1,5 @@
-<!-- This file is made in order to load only Rviz along with state publisher for the neato -->
+<!-- This file is made in order to load only Rviz along with state publisher for the neato,
+ listening to the laser and kinect topics from the gazebo plugins. -->
 
 <launch>	
   
