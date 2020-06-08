@@ -1,8 +1,9 @@
-<!-- This file is made in order to define the gazebo world for the neato robot, so that it can be included in other files -->
+<!-- This file is made in order to define the gazebo world for the neato robot,
+so that it can be included in other files -->
 
 <launch>  
  
-  <arg name="world_file"  default="$(find neato_description)/worlds/living_room.world"/>
+  <arg name="world_file"  default="$(find neato_navigation)/worlds/living_room.world"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">  
     <arg name="use_sim_time" value="true"/>

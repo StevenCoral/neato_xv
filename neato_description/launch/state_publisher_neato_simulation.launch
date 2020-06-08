@@ -1,9 +1,10 @@
-<!-- This file is made in order to publish complete robot TF using the urdf file and the state publishers -->
+<!-- This file is made in order to publish complete robot TF using the urdf file and the state publishers.
+The 2 urdf files just has some different topic names for gazebo -->
 
 <launch>
 
   <arg name="gui" default="False" />
-  <param name="robot_description" textfile="$(find neato_description)/urdf/neato_kinect.urdf" />
+  <param name="robot_description" textfile="$(find neato_description)/urdf/neato_simulation.urdf" />
   <param name="use_gui" value="$(arg gui)"/>
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> 

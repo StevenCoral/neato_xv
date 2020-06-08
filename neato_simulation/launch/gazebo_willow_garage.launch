@@ -1,4 +1,5 @@
-<!-- This file is made in order to define the gazebo world for the neato robot, so that it can be included in other files -->
+<!-- This file is made in order to define the gazebo world for the neato robot,
+so that it can be included in other files -->
 
 <launch>  
  

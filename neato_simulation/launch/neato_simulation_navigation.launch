@@ -1,0 +1,44 @@
+<!-- This file is made in order to run the gazebo world along with Rviz and optionally amcl.
+It is important to only use either "willow garage" or "living room" but not both! -->
+
+<launch>
+  <arg name="navigation" default="true" />
+  <arg name="amcl" default="false" />
+  <arg name="living_room" default="true" /> <!-- default -->
+  <arg name="willow_garage" default="false" /> 
+
+  <node pkg="tf" type="static_transform_publisher" name="static_map" args="0 0 0 0 0 0 map odom 100" unless="$(arg amcl)"/>
+  
+  <include file="$(find neato_description)/launch/state_publisher_neato_simulation.launch" />
+
+  <group if="$(arg willow_garage)">
+    <arg name="map_file" value="$(find neato_navigation)/maps/gazebo-willowgarage.yaml"/>    
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
+    <include file="$(find neato_simulation)/launch/gazebo_willow_garage.launch" />
+    <include file="$(find neato_navigation)/launch/amcl_neato.launch" if="$(arg amcl)">
+      <arg name="initial_pose_x"  value="0"/>
+      <arg name="initial_pose_y"  value="0"/>
+    </include>
+  </group>
+
+  <group if="$(arg living_room)">
+    <arg name="map_file" value="$(find neato_navigation)/maps/living_room_simulation.yaml"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
+    <include file="$(find neato_simulation)/launch/gazebo_living_room.launch" />
+    <include file="$(find neato_navigation)/launch/amcl_neato.launch" if="$(arg amcl)">
+      <arg name="initial_pose_x"  value="1.8"/>
+      <arg name="initial_pose_y"  value="1.8"/>
+    </include>
+  </group>
+
+  <group if="$(arg navigation)">
+    <include file="$(find neato_navigation)/launch/move_base_neato_simulation.launch"/> <!-- publishes "/cmd_vel", not "navigation/cmd_vel" -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find neato_description)/rviz/neato_navigate.rviz" required="true" />
+  </group>
+
+  <!--group if="$(arg teleop)">
+    <include file="$(find neato_navigation)/launch/teleop_keyboard.launch" unless="$(arg navigation)"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find neato_description)/rviz/neato_map.rviz" required="true" />
+  </group> -->
+
+</launch>
