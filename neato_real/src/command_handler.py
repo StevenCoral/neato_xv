@@ -16,7 +16,7 @@ FILTER = 0.5 # Higher=more velocity filtering but also more phase lag
 
 # Max and min values for the robot. 
 # For best kinematics, maximum angular velocity should be approximately (max linear velocity)*2/(RL wheel distance).
-MAX_LINEAR_VEL = 0.5  # m/s for robot advancement.
+MAX_LINEAR_VEL = 0.4  # m/s for robot advancement.
 MAX_ANGULAR_VEL = 1.5708  # rad/sec for robot turning.
 MIN_REF_VELOCITY = 0.01  # To negate computations for low & redundant values
 

@@ -67,12 +67,12 @@ ENC_CPR = 550.0
 
 INT_MAX = 50.0
 KF = 8.0
-KI = 0.02 #0.05
+KI = 0.05
 
-MAX_WHEEL_VEL = 14  # rad/sec for wheel turn. Maximum for individual wheel, not whole robot
-MAX_PWM_OUTPUT = 210
+MAX_WHEEL_VEL = 14.0  # rad/sec for wheel turn. Maximum for individual wheel, not whole robot.
+MIN_REF_VELOCITY = 1.0  # rad/sec for wheel turn. In order to reset integrator when changing output signs.
+MAX_PWM_OUTPUT = 230
 MIN_PWM_OUTPUT = 20
-MIN_REF_VELOCITY = 1.0  # In order to reset integrator when changing output signs
 
 # The following are pin numbers in BCM format.
 # Direction and PWM pins are crucial when using RPi Motor Driver Board.
@@ -214,7 +214,7 @@ if __name__ == '__main__':
 			# Debug printing:
 			if printCount > 10:
 				# print angularRef, linearRef, right_ref, left_ref
-				# print right_ref, right_vel, left_ref, left_vel
+				print right_ref, right_vel, left_ref, left_vel
 				# print 'time',time.time(),'vel',right_vel,'ref',right_ref,'err',rightErr,'out',rightOutput
 				# print 'pos',right_pos,'vel',right_vel,'ref',right_ref,'out',rightOutput
 				# print posX, posY, theta
