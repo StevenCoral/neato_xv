@@ -23,7 +23,7 @@ the "teleop" and "navigation" arguments are one or the other - do not launch wit
   </group>
 
   <group if="$(arg teleop)" > <!-- Designates the "teleop_keyboard" node as the one in charge of issuing velocity commands. -->
-    <include file="$(find neato_real)/launch/pc/teleop_keyboard_pc.launch" unless="$(arg navigation)"/> <!-- remaps to "teleop/cmd_vel" -->
+    <include file="$(find neato_real)/launch/pc/teleop_keyboard_real.launch" unless="$(arg navigation)"/> <!-- remaps to "teleop/cmd_vel" -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find neato_description)/rviz/neato_map.rviz" unless="$(arg navigation)"/>
   </group>
 

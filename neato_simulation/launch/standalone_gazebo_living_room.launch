@@ -7,7 +7,7 @@
   
   <include file="$(find neato_simulation)/launch/gazebo_living_room.launch" />
 
-  <include file="$(find neato_navigation)/launch/teleop_keyboard.launch" />
+  <include file="$(find neato_navigation)/launch/teleop_keyboard_simulation.launch" />
  
 </launch>
 

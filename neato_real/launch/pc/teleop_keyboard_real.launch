@@ -1,0 +1,12 @@
+<!-- This file is made in order to load the teleop node for the neato so you can drive around.
+Node is taken from the turtlebot_teleop package source, since it isnt maintained anymore. 
+Unlike the similar node from neato_navigation, this one remaps the output so that it can be addressed by command_handler.py-->
+
+<launch>
+  <!-- turtlebot_teleop_key already has its own built in velocity smoother -->
+  <node pkg="neato_navigation" type="turtlebot_teleop_key" name="turtlebot_teleop_keyboard"  output="screen">
+    <param name="scale_linear" value="2" type="double"/>
+    <param name="scale_angular" value="1" type="double"/>
+    <remap from="turtlebot_teleop_keyboard/cmd_vel" to="teleop/cmd_vel"/>
+  </node>
+</launch>

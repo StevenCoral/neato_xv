@@ -37,7 +37,7 @@ It is important to only use either "willow garage" or "living room" but not both
   </group>
 
   <!--group if="$(arg teleop)">
-    <include file="$(find neato_navigation)/launch/teleop_keyboard.launch" unless="$(arg navigation)"/>
+    <include file="$(find neato_navigation)/launch/teleop_keyboard_simulation.launch" unless="$(arg navigation)"/>
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find neato_description)/rviz/neato_map.rviz" required="true" />
   </group> -->
 
