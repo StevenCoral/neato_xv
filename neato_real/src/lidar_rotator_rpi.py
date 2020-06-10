@@ -15,7 +15,7 @@ class CallbackHandler:
 	def __init__(self):
 		self.integral = 0
 		self.outputPWM = 0
-		self.nominalPWM = 66  # Different than START_PWM since it needs less "kick".
+		self.nominalPWM = 70  # Different than START_PWM since it needs less "kick".
 		self.maxPWM = 80
 		
 	def spin_control(self,data):
@@ -34,7 +34,7 @@ class CallbackHandler:
 
 			pi.set_PWM_dutycycle(PWM_PIN, int(self.outputPWM))		
 
-		# print data.data, self.outputPWM
+		print data.data, self.outputPWM, self.integral
 	
 
 if __name__ == '__main__':

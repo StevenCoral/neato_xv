@@ -46,13 +46,14 @@ class PidfControl:
 		# for example if we have a gyro attached to the shaft.
 		if vel is None:
 			raw_vel = (pos - self.pos_prev) / self.dt
-			self.pos_prev = setpoint
+			self.pos_prev = pos
 		else:
 			raw_vel = vel
 
 		self.filtered_vel = filter_value(raw_vel, self.vel_prev, self.alpha)
-		if abs(filtered_vel) < 0.001:  # Disable unnecessary computations at low values
+		if abs(self.filtered_vel) < 0.001:  # Disable unnecessary computations at low values
 			self.filtered_vel = 0
+
 		self.vel_prev = self.filtered_vel
 
 		err = setpoint - self.filtered_vel

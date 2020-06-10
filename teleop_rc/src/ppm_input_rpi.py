@@ -49,11 +49,10 @@ if __name__ == "__main__":
 		num_of_channels = len(pins)
 
 		channels = []
-		values = []
+
 		idx = 0
 		for current_pin in pins:
 			channels.append(PPMChannel(current_pin))
-			values.append(channels[idx].pulse_width)  # passing by reference?
 			idx += 1
 
 		maxima = num_of_channels * [0]
@@ -61,7 +60,7 @@ if __name__ == "__main__":
 
 		while True:
 			for channel_idx in range(num_of_channels):
-				current_value = values[channel_idx]
+				current_value = channels[channel_idx].pulse_width
 				if current_value > maxima[channel_idx]:
 					maxima[channel_idx] = current_value
 				if current_value < minima[channel_idx]:
@@ -70,6 +69,7 @@ if __name__ == "__main__":
 						'max:', maxima[channel_idx],
 						'min:', minima[channel_idx],
 						'rest:', current_value)
+			print(' ')
 			time.sleep(1.0)
 
 	except KeyboardInterrupt:
