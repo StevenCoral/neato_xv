@@ -4,8 +4,6 @@
 # allows for custom decision making about what to do with them,
 # then transmits the results to the robot differential drive controller.
 # The published commands are in ROBOT frame, not wheel.
-# Here would be the place to add sensor-based behaviour control which
-# overrides the navigation stack (like ultrasonic proximity break, etc).
 
 import time
 import rospy
@@ -15,22 +13,20 @@ from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 
 TS = 0.02  # Sample time in seconds
 FILTER = 0.5 # Higher=more velocity filtering but also more phase lag
-LINEAR_ACC = 0.5  # m/s^2
-ANGULAR_ACC = 1  # rad/s^2
 
 # Max and min values for the robot. 
 # For best kinematics, maximum angular velocity should be approximately (max linear velocity)*2/(RL wheel distance).
-MAX_LINEAR_VEL = 1  # m/s for robot advancement.
-MAX_ANGULAR_VEL = 3.14  # rad/sec for robot turning.
+MAX_LINEAR_VEL = 0.5  # m/s for robot advancement.
+MAX_ANGULAR_VEL = 1.5708  # rad/sec for robot turning.
 MIN_REF_VELOCITY = 0.01  # To negate computations for low & redundant values
 
 # the following definitions have to be measured per RC!
-MIN_RC_LINEAR = 1100.0
-MAX_RC_LINEAR = 1940.0
-MIDDLE_RC_LINEAR = 1520.0  # has to be measured and specified due to possible trimming.
-MIN_RC_ANGULAR = 1100.0
-MAX_RC_ANGULAR = 1940.0
-MIDDLE_RC_ANGULAR = 1520.0
+MIN_RC_LINEAR = 1040.0
+MAX_RC_LINEAR = 1860.0
+MIDDLE_RC_LINEAR = 1450.0  # has to be measured and specified due to possible trimming.
+MIN_RC_ANGULAR = 1040.0
+MAX_RC_ANGULAR = 1860.0
+MIDDLE_RC_ANGULAR = 1450.0
 RC_DEADZONE = 100  # You might not want the robot to react to very subtle stick movements.
 
 
@@ -41,7 +37,7 @@ class callback_handler:
 
 	def __init__(self):
 		# channel input from RC in the order: linear, angular, toggle
-		self.rc_channel = [MIDDLE_RC_LINEAR, MIDDLE_RC_ANGULAR, 1500]
+		self.rc_channel = [1500, MIDDLE_RC_LINEAR, MIDDLE_RC_ANGULAR]
 		self.linear_external = 0  # linear input from teleoperation or navigation stack
 		self.angular_external = 0  # linear input from teleoperation or navigation stack
 
@@ -69,7 +65,6 @@ if __name__ == '__main__':
 
 	using_navigation = True
 	using_teleop = False
-	limit_acc = False
 	filter_output = False
 
 	# ROS subscriber, publisher and broadcaster setup:
@@ -92,22 +87,23 @@ if __name__ == '__main__':
 	try:
 		while not rospy.is_shutdown():
 
-			inputChooser = robotInputs.rc_channel[2]  # Zero-indexed, this is actually channel 3 on RC
-			if inputChooser < 1400:  # means "when channel3 is up, take over robot with RC"
+			inputChooser = robotInputs.rc_channel[0]  # Channel that sets input mode.
+			if inputChooser < 1400.0:  # Means "when channel 0 is up, navigation will take over, otherwise RC"
 
 				# Check if the values are valid and outside deadzone.
 				# Was not put into a function in order to keep DEFINES at scope.
-				temp = robotInputs.rc_channel[0]
-				if temp < 1000 or temp > 2000 or abs(temp) > (MIDDLE_RC_ANGULAR + RC_DEADZONE):
-					robotAngularRef = 0
-				else:
-					robotAngularRef = mapFloat(temp, MIN_RC_ANGULAR, MAX_RC_ANGULAR, MAX_ANGULAR_VEL, -MAX_ANGULAR_VEL)
 
 				temp = robotInputs.rc_channel[1]
-				if temp < 1000 or temp > 2000 or abs(temp) > (MIDDLE_RC_LINEAR + RC_DEADZONE):
-					robotLinearRef = 0
+				if temp < 1000.0 or temp > 2000.0 or abs(temp - MIDDLE_RC_LINEAR) < RC_DEADZONE:
+					robotLinearRef = 0.0
 				else:
-					robotLinearRef = mapFloat(temp, MIN_RC_LINEAR, MAX_RC_LINEAR, MAX_LINEAR_VEL, -MAX_LINEAR_VEL)
+					robotLinearRef = mapFloat(temp, MIN_RC_LINEAR, MAX_RC_LINEAR, -MAX_LINEAR_VEL, MAX_LINEAR_VEL)
+
+				temp = robotInputs.rc_channel[2]
+				if temp < 1000.0 or temp > 2000.0 or abs(temp - MIDDLE_RC_ANGULAR) < RC_DEADZONE:
+					robotAngularRef = 0.0
+				else:
+					robotAngularRef = mapFloat(temp, MIN_RC_ANGULAR, MAX_RC_ANGULAR, -MAX_ANGULAR_VEL, MAX_ANGULAR_VEL)
 
 			# Here (or after else statement) is the place to add more channel functionality, if needed #
 
@@ -120,21 +116,9 @@ if __name__ == '__main__':
 			# of commands, this whole thing can be done through a completely different node.
 			# This will also require a STOP service call to navigation stack!
 
-			# Apply ramp acceleration limits. Acceleration and deceleration are the same:
-			if limit_acc:
-				if finalAngularRef < robotAngularRef:
-					finalAngularRef += ANGULAR_ACC * TS
-				if finalAngularRef > robotAngularRef:
-					finalAngularRef -= ANGULAR_ACC * TS
-
-				if finalLinearRef < robotLinearRef:
-					finalLinearRef += LINEAR_ACC * TS
-				if finalLinearRef > robotLinearRef:
-					finalLinearRef -= LINEAR_ACC * TS
-
 			# Apply acceleration limits through LPF:
 			# Higher filter value = slower acceleration.
-			elif filter_output:
+			if filter_output:
 				finalLinearRef = prevLinear * FILTER + robotLinearRef * (1 - FILTER)
 				finalAngularRef = prevAngular * FILTER + robotAngularRef * (1 - FILTER)
 
@@ -147,9 +131,9 @@ if __name__ == '__main__':
 				finalAngularRef = robotAngularRef
 
 			if abs(finalLinearRef) < MIN_REF_VELOCITY:
-				finalLinearRef = 0
+				finalLinearRef = 0.0
 			if abs(finalAngularRef) < MIN_REF_VELOCITY:
-				finalAngularRef = 0
+				finalAngularRef = 0.0
 
 			# Calculations should be made at a higher rate than publishing commands?
 			if publishCount > 10:
@@ -160,6 +144,7 @@ if __name__ == '__main__':
 
 			# Debug printing:
 			if printCount > 5:
+				# print robotInputs.rc_channel
 				# print robotInputs.linear_external, robotInputs.angular_external
 				# print leftRef, leftVel, rightRef, rightVel
 				# print 'time',time.time(),'vel',rightVel,'ref',rightRef,'err',rightErr,'out',rightOutput

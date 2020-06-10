@@ -74,15 +74,6 @@ MAX_PWM_OUTPUT = 210
 MIN_PWM_OUTPUT = 20
 MIN_REF_VELOCITY = 1.0  # In order to reset integrator when changing output signs
 
-# The following definitions have to be measured per RC!
-MIN_RC_LINEAR = 1100.0
-MAX_RC_LINEAR = 1940.0
-MIDDLE_RC_LINEAR = 1520.0
-MIN_RC_ANGULAR = 1100.0
-MAX_RC_ANGULAR = 1940.0
-MIDDLE_RC_ANGULAR = 1520.0
-RC_DEADZONE = 100  # It is the engineer's call
-
 # The following are pin numbers in BCM format.
 # Direction and PWM pins are crucial when using RPi Motor Driver Board.
 RIGHT_WHEEL_ENC = 23
@@ -163,13 +154,13 @@ if __name__ == '__main__':
 			# for the wheels to cope with, the following condition will reduce the wheel speed
 			# to the value defined in variable MAX_WHEEL_VEL while keeping the ratio between
 			# commanded linear and angular references.
-			if abs(right_ref)>MAX_WHEEL_VEL or abs(left_ref)>MAX_WHEEL_VEL:
-				angularTemp = angularRef*MAX_WHEEL_VEL/(linearRef*(angularRef+1))
-				linearTemp = linearRef*MAX_WHEEL_VEL/(angularRef*(linearRef+1))
-				angularRef = angularTemp
-				linearRef = linearTemp
-				right_ref = linearRef+angularRef
-				left_ref = linearRef-angularRef
+			#if abs(right_ref)>MAX_WHEEL_VEL or abs(left_ref)>MAX_WHEEL_VEL:
+			#	angularTemp = angularRef*MAX_WHEEL_VEL/(linearRef*angularRef+1)
+			#	linearTemp = linearRef*MAX_WHEEL_VEL/(angularRef*linearRef+1)
+			#	angularRef = angularTemp
+			#	linearRef = linearTemp
+			#	right_ref = linearRef+angularRef
+			#	left_ref = linearRef-angularRef
 
 			# About direction: when letting go of the stick, reference immediately drops to zero,
 			# but the wheels keep on turning due to inertia, which leads to a negative reference,
@@ -179,9 +170,9 @@ if __name__ == '__main__':
 			if right_ref < 0:
 				right_encoder.direction = 0
 			if left_ref > 0:
-				right_encoder.direction = 1
+				left_encoder.direction = 1
 			if left_ref < 0:
-				right_encoder.direction = 0
+				left_encoder.direction = 0
 
 			# enc2rad means the measure is about wheel angle in radians, not movement length in meters
 			right_pos = right_encoder.stepCount * enc2rad
@@ -221,7 +212,7 @@ if __name__ == '__main__':
 				publishCount = 1
 
 			# Debug printing:
-			if printCount > 5:
+			if printCount > 10:
 				# print angularRef, linearRef, right_ref, left_ref
 				# print right_ref, right_vel, left_ref, left_vel
 				# print 'time',time.time(),'vel',right_vel,'ref',right_ref,'err',rightErr,'out',rightOutput
@@ -243,3 +234,4 @@ if __name__ == '__main__':
 		encoder_rpi.Encoder.pi.set_pull_up_down(RIGHT_WHEEL_ENC, pigpio.PUD_OFF)
 		encoder_rpi.Encoder.pi.set_pull_up_down(LEFT_WHEEL_ENC, pigpio.PUD_OFF)
 		encoder_rpi.Encoder.clear_pigpio()
+
