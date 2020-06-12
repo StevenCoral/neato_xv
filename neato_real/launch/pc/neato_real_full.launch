@@ -2,8 +2,7 @@
 the "teleop" and "navigation" arguments are one or the other - do not launch with both being true! -->
 
 <launch>
-  <arg name="teleop" default="true" /> <!-- default -->
-  <arg name="navigation" default="false" />
+  <arg name="navigation" default="true" />
   <arg name="amcl" default="false" />
 
   <node pkg="tf" type="static_transform_publisher" name="static_map" args="0 0 0 0 0 0 map odom 100" unless="$(arg amcl)"/>
@@ -18,12 +17,12 @@ the "teleop" and "navigation" arguments are one or the other - do not launch wit
   </include>
 
   <group if="$(arg navigation)"> <!-- Designates the "move_base" node as the one in charge of issuing velocity commands. -->
-    <include file="$(find neato_navigation)/launch/move_base_neato_real.launch"/> <!-- Remaps from "/cmd_vel" to "navigation/cmd_vel" -->
+    <include file="$(find neato_navigation)/launch/move_base_neato_real.launch"/> <!-- Remaps to "navigation/cmd_vel" -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find neato_description)/rviz/neato_navigate.rviz" required="true" />
   </group>
 
-  <group if="$(arg teleop)" > <!-- Designates the "teleop_keyboard" node as the one in charge of issuing velocity commands. -->
-    <include file="$(find neato_real)/launch/pc/teleop_keyboard_real.launch" unless="$(arg navigation)"/> <!-- remaps to "teleop/cmd_vel" -->
+  <group unless="$(arg navigation)" > <!-- Designates the "teleop_keyboard" node as the one in charge of issuing velocity commands. -->
+    <include file="$(find neato_real)/launch/pc/teleop_keyboard_real.launch"/> <!-- remaps to "teleop/cmd_vel" -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find neato_description)/rviz/neato_map.rviz" unless="$(arg navigation)"/>
   </group>
 
